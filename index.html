@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sajawal Hussain — Android Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12141C;
+    --bg-raised: #191C27;
+    --panel: #1E2230;
+    --line: #2C3142;
+    --text: #EDEAE3;
+    --text-dim: #9A9FB2;
+    --text-faint: #676C82;
+    --kotlin: #7F52FF;
+    --kotlin-dim: #5C3ECC;
+    --amber: #FFB300;
+    --green: #3DDC84;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--kotlin); color:#fff;}
+
+  a{color:inherit; text-decoration:none;}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:3px;}
+
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- background texture ---------- */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(127,82,255,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,82,255,0.055) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black 20%, transparent 75%);
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,20,28,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px;}
+  .logo{
+    font-family:var(--font-mono); font-weight:600; font-size:15px;
+    color:var(--text);
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green);}
+  .navlinks{display:flex; gap:28px; font-family:var(--font-mono); font-size:13px; color:var(--text-dim);}
+  .navlinks a{transition:color .2s;}
+  .navlinks a:hover{color:var(--amber);}
+  @media (max-width:640px){ .navlinks{display:none;} }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; z-index:1; padding:88px 0 64px; }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:880px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .eyebrow{
+    font-family:var(--font-mono); font-size:13px; color:var(--green);
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--green);}
+
+  h1.name{
+    font-family:var(--font-display); font-weight:700;
+    font-size:clamp(38px, 5.5vw, 60px);
+    line-height:1.04; letter-spacing:-0.02em;
+    margin-bottom:10px;
+  }
+  h1.name .accent{color:var(--kotlin);}
+
+  .role{
+    font-family:var(--font-mono); font-size:17px; color:var(--text-dim);
+    margin-bottom:22px;
+  }
+  .role .cursor{display:inline-block; width:9px; height:18px; background:var(--amber); margin-left:2px; animation:blink 1s steps(1) infinite; vertical-align:-3px;}
+  @keyframes blink{50%{opacity:0;}}
+  @media (prefers-reduced-motion:reduce){ .role .cursor{animation:none;} }
+
+  .lede{ font-size:16px; color:var(--text-dim); max-width:52ch; margin-bottom:32px; }
+  .lede strong{color:var(--text); font-weight:600;}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--font-mono); font-size:13px; padding:13px 22px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:8px; transition:transform .15s, border-color .15s;
+    border:1px solid var(--line);
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--kotlin); color:#fff; border-color:var(--kotlin);}
+  .btn-primary:hover{background:var(--kotlin-dim);}
+  .btn-ghost{color:var(--text); border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber);}
+
+  /* ---------- code panel (signature) ---------- */
+  .code-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    overflow:hidden; box-shadow:0 24px 60px -20px rgba(0,0,0,0.6);
+  }
+  .code-titlebar{
+    display:flex; align-items:center; gap:8px; padding:12px 16px;
+    background:var(--bg-raised); border-bottom:1px solid var(--line);
+  }
+  .code-titlebar span{width:11px; height:11px; border-radius:50%;}
+  .code-titlebar .r{background:#FF5F57;} .code-titlebar .y{background:#FEBC2E;} .code-titlebar .g{background:#28C840;}
+  .code-titlebar .filename{font-family:var(--font-mono); font-size:12px; color:var(--text-faint); margin-left:8px;}
+  .code-body{padding:22px 20px; font-family:var(--font-mono); font-size:13.5px; line-height:1.9;}
+  .code-body .ln{color:var(--text-faint); display:inline-block; width:22px; user-select:none;}
+  .kw{color:var(--kotlin);} .str{color:var(--green);} .fn{color:var(--amber);} .cm{color:var(--text-faint); font-style:italic;}
+
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-top:20px;}
+  .stat{background:var(--panel); padding:16px 10px; text-align:center;}
+  .stat b{display:block; font-family:var(--font-display); font-size:22px; color:var(--amber);}
+  .stat span{font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.04em;}
+  @media (max-width:520px){ .stat-row{grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- sections shared ---------- */
+  section{position:relative; z-index:1; padding:64px 0;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:36px;}
+  .sec-head .tag{font-family:var(--font-mono); font-size:12px; color:var(--kotlin); background:rgba(127,82,255,0.12); padding:4px 10px; border-radius:6px;}
+  .sec-head h2{font-family:var(--font-display); font-size:clamp(24px,3.4vw,32px); font-weight:600; letter-spacing:-0.01em;}
+  .divider{height:1px; background:var(--line); border:none;}
+
+  /* ---------- skills ---------- */
+  .skill-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:880px){ .skill-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .skill-grid{grid-template-columns:1fr;} }
+  .skill-card{background:var(--bg-raised); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .skill-card h3{font-family:var(--font-mono); font-size:12px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em; margin-bottom:14px;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{font-family:var(--font-mono); font-size:12.5px; padding:6px 11px; border-radius:6px; background:var(--panel); border:1px solid var(--line); color:var(--text);}
+
+  /* ---------- experience: git log style ---------- */
+  .log{position:relative; padding-left:28px;}
+  .log::before{content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .commit{position:relative; padding-bottom:36px;}
+  .commit:last-child{padding-bottom:0;}
+  .commit::before{
+    content:''; position:absolute; left:-28px; top:5px; width:11px; height:11px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--green);
+  }
+  .commit.current::before{border-color:var(--amber); box-shadow:0 0 0 4px rgba(255,179,0,0.15);}
+  .commit-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:6px;}
+  .commit-role{font-family:var(--font-display); font-weight:600; font-size:18px;}
+  .commit-date{font-family:var(--font-mono); font-size:12px; color:var(--text-faint);}
+  .commit-org{font-size:14px; color:var(--kotlin); margin-bottom:10px;}
+  .commit ul{padding-left:18px; color:var(--text-dim); font-size:14.5px;}
+  .commit li{margin-bottom:4px;}
+
+  /* ---------- projects ---------- */
+  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media (max-width:760px){ .proj-grid{grid-template-columns:1fr;} }
+  .proj-card{
+    background:var(--bg-raised); border:1px solid var(--line); border-radius:12px; padding:24px;
+    transition:border-color .2s, transform .2s;
+  }
+  .proj-card:hover{border-color:var(--kotlin-dim); transform:translateY(-3px);}
+  .proj-top{display:flex; align-items:center; gap:14px; margin-bottom:14px;}
+  .proj-icon{width:44px; height:44px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:16px; color:#12141C;}
+  .proj-title{font-family:var(--font-display); font-weight:600; font-size:17px;}
+  .proj-ext{font-family:var(--font-mono); font-size:11px; color:var(--text-faint);}
+  .proj-desc{font-size:14px; color:var(--text-dim); margin-bottom:14px;}
+  .proj-tags{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .proj-tags span{font-family:var(--font-mono); font-size:11px; color:var(--text-dim); background:var(--panel); padding:4px 9px; border-radius:5px; border:1px solid var(--line);}
+  .proj-link{font-family:var(--font-mono); font-size:12.5px; color:var(--amber);}
+  .proj-link:hover{text-decoration:underline;}
+
+  /* ---------- education ---------- */
+  .edu-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:760px){ .edu-row{grid-template-columns:1fr;} }
+  .edu-card{border:1px solid var(--line); border-radius:10px; padding:18px; background:var(--bg-raised);}
+  .edu-card .deg{font-family:var(--font-display); font-weight:600; font-size:15.5px; margin-bottom:4px;}
+  .edu-card .inst{font-size:13.5px; color:var(--text-dim); margin-bottom:8px;}
+  .edu-card .meta{font-family:var(--font-mono); font-size:11.5px; color:var(--text-faint);}
+
+  /* ---------- footer / contact ---------- */
+  footer{position:relative; z-index:1; padding:64px 0 48px; border-top:1px solid var(--line); margin-top:20px;}
+  .term{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:22px 24px;
+    font-family:var(--font-mono); font-size:13.5px; color:var(--text-dim); max-width:640px; margin:0 auto 32px;
+  }
+  .term .p1{color:var(--green);} .term .p2{color:var(--kotlin);}
+  .term a{color:var(--amber);}
+  .foot-links{display:flex; justify-content:center; gap:26px; flex-wrap:wrap; font-family:var(--font-mono); font-size:13px; color:var(--text-dim);}
+  .foot-links a:hover{color:var(--amber);}
+  .foot-bottom{text-align:center; margin-top:36px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-faint);}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header>
+  <nav class="wrap">
+    <div class="logo"><span class="dot"></span>sajawal.apk</div>
+    <div class="navlinks">
+      <a href="#skills">skills</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#contact">contact</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">AVAILABLE FOR OPPORTUNITIES</div>
+        <h1 class="name">Sajawal<br><span class="accent">Hussain</span></h1>
+        <div class="role">Android Developer <span class="cursor"></span></div>
+        <p class="lede">
+          <strong>3.5+ years</strong> shipping Android apps that people actually keep on their phones —
+          video players, AdMob-monetized games, AI tools, and map-heavy utilities. Kotlin-first,
+          MVVM by default, built to ship on schedule.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="mailto:sajawalhussain0006@gmail.com">Email me →</a>
+          <a class="btn btn-ghost" href="#projects">View projects</a>
+          <a class="btn btn-ghost" href="tel:+923150747476">+92-315-0747476</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/sajawal-hussain-%E2%AD%90-android-developer-06a753245/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="code-panel">
+          <div class="code-titlebar">
+            <span class="r"></span><span class="y"></span><span class="g"></span>
+            <span class="filename">SajawalHussain.kt</span>
+          </div>
+          <div class="code-body">
+<div><span class="ln">1</span><span class="kw">class</span> SajawalHussain : <span class="fn">AndroidDeveloper</span>() {</div>
+<div><span class="ln">2</span>&nbsp;&nbsp;<span class="kw">val</span> experience = <span class="str">3.5</span> <span class="cm">// years</span></div>
+<div><span class="ln">3</span>&nbsp;&nbsp;<span class="kw">val</span> location = <span class="str">"Lahore, Pakistan"</span></div>
+<div><span class="ln">4</span>&nbsp;&nbsp;<span class="kw">val</span> stack = listOf(</div>
+<div><span class="ln">5</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Kotlin"</span>, <span class="str">"MVVM"</span>, <span class="str">"AdMob"</span>, <span class="str">"Maps"</span></div>
+<div><span class="ln">6</span>&nbsp;&nbsp;)</div>
+<div><span class="ln">7</span></div>
+<div><span class="ln">8</span>&nbsp;&nbsp;<span class="kw">fun</span> <span class="fn">ship</span>() = <span class="str">"on schedule"</span></div>
+<div><span class="ln">9</span>}</div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat"><b>3.5+</b><span>Years Exp.</span></div>
+          <div class="stat"><b>8+</b><span>Apps Shipped</span></div>
+          <div class="stat"><b>96+</b><span>Video Formats</span></div>
+          <div class="stat"><b>7</b><span>AdMob Formats</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider wrap">
+
+  <section id="skills" class="wrap">
+    <div class="sec-head"><span class="tag">01</span><h2>Technical Skills</h2></div>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <h3>Languages</h3>
+        <div class="chip-row">
+          <span class="chip">Kotlin</span><span class="chip">Java</span><span class="chip">Flutter</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Architecture</h3>
+        <div class="chip-row">
+          <span class="chip">MVVM</span><span class="chip">Clean Architecture</span><span class="chip">Coroutines</span><span class="chip">LiveData</span><span class="chip">Flow</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Android Development</h3>
+        <div class="chip-row">
+          <span class="chip">Android SDK</span><span class="chip">View Binding</span><span class="chip">Navigation Component</span><span class="chip">Room DB</span><span class="chip">Services</span><span class="chip">Broadcast Receivers</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Networking &amp; Data</h3>
+        <div class="chip-row">
+          <span class="chip">Retrofit</span><span class="chip">Volley</span><span class="chip">REST APIs</span><span class="chip">JSON</span><span class="chip">Glide</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Maps &amp; Location</h3>
+        <div class="chip-row">
+          <span class="chip">Google Maps</span><span class="chip">OSM Maps</span><span class="chip">MapBox</span><span class="chip">Location Services</span><span class="chip">Sensors</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Monetization</h3>
+        <div class="chip-row">
+          <span class="chip">AdMob Rewarded</span><span class="chip">Banner</span><span class="chip">Interstitial</span><span class="chip">App Open</span><span class="chip">Native</span><span class="chip">Ad Mediation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider wrap">
+
+  <section id="experience" class="wrap">
+    <div class="sec-head"><span class="tag">02</span><h2>Experience</h2></div>
+    <div class="log">
+      <div class="commit current">
+        <div class="commit-head"><span class="commit-role">Android Developer</span><span class="commit-date">Dec 2023 — Present</span></div>
+        <div class="commit-org">Ainsoft Tech Company · Mobile Gaming Apps · Lahore</div>
+        <ul>
+          <li>Develop and maintain Android apps using Kotlin and modern architecture components</li>
+          <li>Integrate Google AdMob and Ad Mediation to optimize ad revenue without hurting UX</li>
+          <li>Collaborate cross-functionally to design, build, and ship features on schedule</li>
+        </ul>
+      </div>
+      <div class="commit">
+        <div class="commit-head"><span class="commit-role">Android Developer</span><span class="commit-date">Oct 2022 — Oct 2023</span></div>
+        <div class="commit-org">Grape Technologies Pvt Limited · Islamabad</div>
+        <ul>
+          <li>Built and maintained Android apps using Kotlin, Jetpack components, and MVVM</li>
+          <li>Integrated REST APIs with Retrofit; handled async work with Kotlin Coroutines</li>
+          <li>Shipped location-based features using Google Maps and OSM Maps APIs</li>
+        </ul>
+      </div>
+      <div class="commit">
+        <div class="commit-head"><span class="commit-role">Android Developer — Intern</span><span class="commit-date">Nov 2021 — Apr 2022</span></div>
+        <div class="commit-org">Enfortix (Pvt. Ltd.) · Sargodha</div>
+        <ul>
+          <li>Assisted in developing and testing Android features under senior developer guidance</li>
+          <li>Gained hands-on experience with Android SDK, XML layouts, and lifecycle management</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider wrap">
+
+  <section id="projects" class="wrap">
+    <div class="sec-head"><span class="tag">03</span><h2>Key Projects</h2></div>
+    <div class="proj-grid">
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#7F52FF,#B39DFF);">MP</div>
+          <div><div class="proj-title">Max Player</div><div class="proj-ext">video-player.kt</div></div>
+        </div>
+        <p class="proj-desc">Feature-rich video player supporting 96+ formats (MP4, MKV, AVI, MOV, FLV, 3GP), with a PIN + fingerprint-secured private folder, HDR, subtitles, and Picture-in-Picture.</p>
+        <div class="proj-tags"><span>Kotlin</span><span>Media Playback</span><span>Room DB</span></div>
+        <a class="proj-link" href="https://play.google.com/store/apps/details?id=videoplayer.movies.videoeditor.hd" target="_blank" rel="noopener">View on Play Store →</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#3DDC84,#8FF0BC);">SS</div>
+          <div><div class="proj-title">Status Saver</div><div class="proj-ext">whatsapp-status.kt</div></div>
+        </div>
+        <p class="proj-desc">WhatsApp status manager with auto-detection, save notifications, multi-account support (incl. Business), deleted-media recovery, and audio extraction from statuses.</p>
+        <div class="proj-tags"><span>Kotlin</span><span>Broadcast Receivers</span><span>Multilingual</span></div>
+        <a class="proj-link" href="#" onclick="return false;">Status Saver &amp; Save Status — Video Downloader</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#FF5C93,#FFB300);">VE</div>
+          <div><div class="proj-title">Video Editor &amp; Photo Video Maker</div><div class="proj-ext">slidefy-vicut.kt</div></div>
+        </div>
+        <p class="proj-desc">Trim, crop, reverse, compress, blur, mute, overlay, GIF export, watermarking, and music-driven slideshow creation across two shipped apps.</p>
+        <div class="proj-tags"><span>Media Processing</span><span>MVVM</span></div>
+        <a class="proj-link" href="#" onclick="return false;">Slidefy · Vicut</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#7F52FF,#3DDC84);">AI</div>
+          <div><div class="proj-title">AI Image Generation</div><div class="proj-ext">genai-aiart.kt</div></div>
+        </div>
+        <p class="proj-desc">Text-to-image generator with a chat-based UI and prompt/image history, built on Clean Architecture with Retrofit + Coroutines for async generation calls.</p>
+        <div class="proj-tags"><span>Kotlin</span><span>Clean Architecture</span><span>REST APIs</span></div>
+        <a class="proj-link" href="https://play.google.com/store/apps/details?id=com.genai.aiart" target="_blank" rel="noopener">View on Play Store →</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#2E86FF,#3DDC84);">VPN</div>
+          <div><div class="proj-title">VPN Application (R&amp;D)</div><div class="proj-ext">vpn-core.kt</div></div>
+        </div>
+        <p class="proj-desc">Core VPN R&amp;D: server-configuration APIs, connect/disconnect state handling, and a foreground service that keeps the tunnel alive in the background.</p>
+        <div class="proj-tags"><span>Foreground Service</span><span>Networking</span></div>
+        <a class="proj-link" href="#" onclick="return false;">Internal R&amp;D project</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#00B39F,#3DDC84);">GE</div>
+          <div><div class="proj-title">Live Earth Map &amp; Street View</div><div class="proj-ext">osm-globe.kt</div></div>
+        </div>
+        <p class="proj-desc">3D globe view, street view, satellite finder, area measurement, and route planning — plus weather, compass, pedometer, and QR utilities via device sensors.</p>
+        <div class="proj-tags"><span>OSM Maps</span><span>Sensors</span><span>Location</span></div>
+        <a class="proj-link" href="https://play.google.com/store/apps/details?id=com.live.street.views.solar.system" target="_blank" rel="noopener">View on Play Store →</a>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:linear-gradient(135deg,#2E86FF,#FFB300);">WX</div>
+          <div><div class="proj-title">Weather App</div><div class="proj-ext">weather.kt</div></div>
+        </div>
+        <p class="proj-desc">Real-time forecasting app covering air quality, hourly/daily outlooks, and driving-condition advisories.</p>
+        <div class="proj-tags"><span>REST APIs</span><span>Kotlin</span></div>
+        <a class="proj-link" href="#" onclick="return false;">In-house project</a>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider wrap">
+
+  <section id="education" class="wrap">
+    <div class="sec-head"><span class="tag">04</span><h2>Education</h2></div>
+    <div class="edu-row">
+      <div class="edu-card">
+        <div class="deg">BS Computer Science</div>
+        <div class="inst">University of Lahore</div>
+        <div class="meta">2018 – 2022 · CGPA 3.65</div>
+      </div>
+      <div class="edu-card">
+        <div class="deg">ICS</div>
+        <div class="inst">Superior College, Bhalwal</div>
+        <div class="meta">2015 – 2017 · 1st Division</div>
+      </div>
+      <div class="edu-card">
+        <div class="deg">Matriculation</div>
+        <div class="inst">Govt. High School, Bhalwal</div>
+        <div class="meta">2013 – 2015 · 1st Division</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact" class="wrap">
+  <div class="term">
+    <span class="p1">sajawal@lahore</span>:<span class="p2">~$</span> contact --send<br>
+    Email &nbsp;→ <a href="mailto:sajawalhussain0006@gmail.com">sajawalhussain0006@gmail.com</a><br>
+    Phone &nbsp;→ <a href="tel:+923150747476">+92-315-0747476</a><br>
+    LinkedIn → <a href="https://www.linkedin.com/in/sajawal-hussain-%E2%AD%90-android-developer-06a753245/" target="_blank" rel="noopener">/in/sajawal-hussain</a><br>
+    Based in → Lahore, Pakistan
+  </div>
+  <div class="foot-links">
+    <a href="mailto:sajawalhussain0006@gmail.com">Email</a>
+    <a href="tel:+923150747476">Call</a>
+    <a href="https://www.linkedin.com/in/sajawal-hussain-%E2%AD%90-android-developer-06a753245/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+  </div>
+  <div class="foot-bottom">© 2026 Sajawal Hussain — Android Developer, Lahore</div>
+</footer>
+
+</body>
+</html>
